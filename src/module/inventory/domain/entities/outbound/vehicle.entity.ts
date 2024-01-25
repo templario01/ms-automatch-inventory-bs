@@ -1,5 +1,7 @@
 import { Vehicle as PrismaVehicle } from '@prisma/client';
 import { plainToInstance } from 'class-transformer';
+import { Paginator } from './paginator.entity';
+import { IPaginatedResponse } from '../../repositories/interfaces/pagination.interface';
 
 export enum VehicleCondition {
   NEW = 'NEW',
@@ -18,6 +20,7 @@ export enum VehicleListingStatus {
 
 export class Vehicle {
   readonly id: string;
+  readonly name?: string;
   readonly externalId: string;
   readonly url: string;
   readonly description: string;
@@ -36,12 +39,22 @@ export class Vehicle {
   readonly websiteId: string;
   readonly status: VehicleListingStatus;
 
-  static prismaToEntity(data: PrismaVehicle) {
+  static prismaToEntity(data: PrismaVehicle): Vehicle {
     return plainToInstance(Vehicle, {
       ...data,
       condition: VehicleCondition[data.condition],
       status: VehicleListingStatus[data.status],
       currency: VehiclePriceCurrency[data.currency],
+    });
+  }
+
+  static prismaToEntities(data: PrismaVehicle[]): Vehicle[] {
+    return data.map((vehicle) => Vehicle.prismaToEntity(vehicle));
+  }
+
+  static paginate(data: IPaginatedResponse<Vehicle>): Paginator<Vehicle> {
+    return plainToInstance(Paginator<Vehicle>, {
+      ...data,
     });
   }
 }

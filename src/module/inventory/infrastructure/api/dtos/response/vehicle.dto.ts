@@ -1,8 +1,8 @@
 import { ApiAcceptedResponse, ApiProperty } from '@nestjs/swagger';
-import { VehicleCondition } from '../../../domain/vehicle';
+import { VehicleCondition } from '../../../../domain/entities/outbound/vehicle.entity';
 
 @ApiAcceptedResponse()
-export class VehicleResponseDto {
+export class VehicleDto {
   @ApiProperty({
     description: 'vehicle Id',
     example: '65aeef8c8e4565258e33316e',
@@ -18,6 +18,12 @@ export class VehicleResponseDto {
       'https://neoauto.com/https://neoauto.com/auto/usado/jeep-grand-cherokee-laredo-2014-1768933',
   })
   readonly url: string;
+
+  @ApiProperty({
+    description: 'vehicle name',
+    example: 'jeep grand cherokee laredo 2014',
+  })
+  readonly name?: string;
 
   @ApiProperty({
     description: 'vehicle description',

@@ -1,35 +1,173 @@
 import {
   Injectable,
+  Logger,
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { InventoryRepository } from '../../domain/repositories/inventory.repository';
 import { Vehicle as PrismaVehicle } from '@prisma/client';
-import { Vehicle } from '../../domain/vehicle';
+import { IEdgeType } from '../../domain/repositories/interfaces/pagination.interface';
+import { Paginator } from '../../domain/entities/outbound/paginator.entity';
+import { IPrismaVehicleInput } from '../../domain/repositories/interfaces/prisma-vehicle.interface';
+import { SearchVehicles } from '../../domain/entities/inbound/search-vehicles.entity';
+import {
+  Vehicle,
+  VehicleCondition,
+} from '../../domain/entities/outbound/vehicle.entity';
+import { IGetInventoryFilters } from '../../domain/repositories/interfaces/get-inventory-filters';
 
 @Injectable()
 export class PrismaInventoryRepository implements InventoryRepository {
+  private readonly logger = new Logger(PrismaInventoryRepository.name);
   constructor(private readonly prisma: PrismaService) {}
 
-  public async getVehicles() {
-    return [];
-  }
-
-  public async getVehicle(id: string): Promise<Vehicle> {
+  public async getVehiclesByIds(vehicleIds: string[]): Promise<Vehicle[]> {
     try {
-      const prismaVehicle: Awaited<PrismaVehicle> =
-        await this.prisma.vehicle.findUnique({
-          where: { id },
+      const prismaVehicles: Awaited<PrismaVehicle[]> =
+        await this.prisma.vehicle.findMany({
+          where: { id: { in: [...vehicleIds] } },
         });
 
-      if (!prismaVehicle) {
+      if (!prismaVehicles || prismaVehicles.length === 0) {
         throw new NotFoundException('Resource not found');
       }
 
-      return Vehicle.prismaToEntity(prismaVehicle);
+      return Vehicle.prismaToEntities(prismaVehicles);
     } catch (error) {
+      this.logger.error({ msg: 'fail to get vehicle info', error });
       throw new UnprocessableEntityException();
     }
+  }
+
+  public getVehiclesBySearch(
+    params: SearchVehicles,
+  ): Promise<Paginator<Vehicle>> {
+    const { brand, model, location, minPrice, maxPrice, year, condition } =
+      params;
+
+    const whereFilter = {
+      AND: [
+        this.buildNameFilter(brand, model),
+        this.buildYearFilter(year),
+        this.buildLocationFilter(location),
+        this.buildConditionFilter(condition),
+        this.buildPriceFilter(minPrice, maxPrice),
+      ],
+    };
+
+    return this.getVehiclesByPrismaFilter({ ...params, where: whereFilter });
+  }
+
+  private async getVehiclesByPrismaFilter(
+    params: IGetInventoryFilters,
+  ): Promise<Paginator<Vehicle>> {
+    const { take, after, where, hasOrderBy = true } = params;
+    const totalCount: Awaited<number> = await this.prisma.vehicle.count({
+      where,
+    });
+    const vehicles: Awaited<PrismaVehicle[]> =
+      await this.prisma.vehicle.findMany({
+        where,
+        take: typeof take === 'number' ? take + 1 : undefined,
+        skip: after ? 1 : undefined,
+        cursor: after ? { id: after } : undefined,
+        orderBy: hasOrderBy ? [{ price: 'asc' }] : [],
+      });
+
+    const results = Vehicle.prismaToEntities(vehicles);
+
+    const hasNextPage =
+      typeof take === 'number' ? results.length > take : false;
+    if (hasNextPage) results.pop();
+
+    const lastItem = results[results?.length - 1];
+    const endCursor = lastItem?.id;
+    const edges = results.map<IEdgeType<Vehicle>>((vehicle) => ({
+      cursor: vehicle.id,
+      node: vehicle,
+    }));
+
+    return Vehicle.paginate({
+      nodes: results,
+      edges,
+      hasNextPage,
+      endCursor,
+      totalCount,
+    });
+  }
+
+  private buildConditionFilter(
+    condition?: VehicleCondition,
+  ): IPrismaVehicleInput {
+    return condition
+      ? { condition: { equals: VehicleCondition[condition] } }
+      : {};
+  }
+
+  private buildLocationFilter(location?: string): IPrismaVehicleInput {
+    return location
+      ? {
+          location: {
+            contains: location,
+            mode: 'insensitive',
+          },
+        }
+      : {};
+  }
+
+  private buildPriceFilter(
+    minPrice: number,
+    maxPrice: number,
+  ): IPrismaVehicleInput {
+    if (minPrice && !maxPrice) {
+      return { price: { gte: minPrice } };
+    }
+    if (maxPrice && !minPrice) {
+      return { price: { lte: maxPrice } };
+    }
+    if (minPrice && maxPrice) {
+      return { price: { gte: minPrice, lte: maxPrice } };
+    }
+
+    return {};
+  }
+
+  private buildYearFilter(year?: number): IPrismaVehicleInput {
+    return year ? { year: { equals: year } } : {};
+  }
+
+  private buildNameFilter(brand?: string, model?: string): IPrismaVehicleInput {
+    if (brand && !model) {
+      return {
+        name: {
+          contains: brand,
+          mode: 'insensitive',
+        },
+      };
+    }
+    if (model && !brand) {
+      return {
+        name: {
+          contains: model,
+          mode: 'insensitive',
+        },
+      };
+    }
+
+    if (brand && model) {
+      return {
+        AND: [
+          {
+            name: { contains: brand, mode: 'insensitive' },
+          },
+          {
+            name: { contains: model, mode: 'insensitive' },
+          },
+        ],
+      };
+    }
+
+    return {};
   }
 }

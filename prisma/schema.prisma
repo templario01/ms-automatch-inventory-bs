@@ -25,6 +25,7 @@ model Website {
 model Vehicle {
   id            String     @id @default(auto()) @map("_id") @db.ObjectId
   externalId    String?    @unique @map("external_id")
+  name          String?
   url           String
   description   String?
   year          Int?

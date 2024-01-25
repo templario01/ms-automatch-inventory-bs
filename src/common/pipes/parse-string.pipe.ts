@@ -8,13 +8,15 @@ import { ObjectId } from 'mongodb';
 import { isEmpty } from 'class-validator';
 
 @Injectable()
-export class ParseIdPipe implements PipeTransform {
+export class ExtractIdsPipe implements PipeTransform {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   transform(value: any, metadata: ArgumentMetadata) {
-    if (isEmpty(value) || !ObjectId.isValid(value)) {
-      throw new BadRequestException(`Invalid Param ID structure: "${value}"`);
-    }
-
-    return value;
+    if (!value) throw new BadRequestException(`Query param is missing "?ids="`);
+    return value.split(',').map((id) => {
+      if (isEmpty(id) || !ObjectId.isValid(id)) {
+        throw new BadRequestException(`Invalid query param value: "${id}"`);
+      }
+      return id;
+    });
   }
 }
