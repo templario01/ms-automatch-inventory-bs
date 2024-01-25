@@ -1,3 +1,4 @@
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsNumber,
@@ -7,11 +8,13 @@ import {
 } from 'class-validator';
 
 export class CursorPaginatorDto {
+  @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
   @Min(0)
-  readonly take: number;
+  readonly take?: number;
 
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   @IsNotEmpty()

@@ -12,7 +12,7 @@ export class ExtractIdsPipe implements PipeTransform {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   transform(value: any, metadata: ArgumentMetadata) {
     if (!value) throw new BadRequestException(`Query param is missing "?ids="`);
-    return value.split(',').map((id) => {
+    return value?.split(',').map((id) => {
       if (isEmpty(id) || !ObjectId.isValid(id)) {
         throw new BadRequestException(`Invalid query param value: "${id}"`);
       }

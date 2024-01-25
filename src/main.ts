@@ -12,6 +12,7 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
+  app.setGlobalPrefix('v1');
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
