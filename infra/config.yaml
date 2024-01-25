@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: automatch
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: automatch-inventory-bs-deploy
+  namespace: automatch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ms-automatch-inventory-bs
+  template:
+    metadata:
+      labels:
+        app: ms-automatch-inventory-bs
+    spec:
+      containers:
+        - name: <name>
+          image: <aws-erc-name>
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: automatch-inventory-bs-svc
+  namespace: automatch
+spec:
+  selector:
+    app: ms-automatch-inventory-bs
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP #[ClusterIP]Expose node for internal k8 comunication, [LoadBalancer]Expose node for external comunication
+---
+
