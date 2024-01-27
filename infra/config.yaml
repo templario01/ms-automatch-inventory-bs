@@ -24,14 +24,14 @@ spec:
           image: <aws-erc-name>
           imagePullPolicy: Always
           ports:
-            - containerPort: 8080
+            - containerPort: 8030
           resources:
             requests:
-              memory: "64Mi"
-              cpu: "50m"
-            limits:
               memory: "128Mi"
               cpu: "100m"
+            limits:
+              memory: "512Mi" # max RAM = 512 Mb
+              cpu: "300m" # max CPU-Cores = 0.3 GB
 
 ---
 apiVersion: v1

@@ -5,7 +5,8 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -29,8 +30,12 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
+  const port = app.get(ConfigService).get<number>('PORT');
+  const logger = new Logger('Bootstrap');
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3000);
+  await app.listen(port, '0.0.0.0', () => {
+    logger.log(`Server running on port: ${port} 🚀 ✨✨`);
+  });
 }
 bootstrap();
