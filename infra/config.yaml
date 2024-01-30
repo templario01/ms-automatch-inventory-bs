@@ -44,6 +44,11 @@ spec:
                 configMapKeyRef:
                   name: automatch-inventory-bs-configmap
                   key: PORT
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: automatch-inventory-bs-secrets
+                  key: DATABASE_URL
           ports:
             - containerPort: 3030
           resources:
