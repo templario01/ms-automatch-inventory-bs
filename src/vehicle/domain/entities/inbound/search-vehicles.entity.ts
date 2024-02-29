@@ -1,7 +1,7 @@
 import { VehicleCondition } from '../outbound/vehicle.entity';
-import { CursorPaginator } from './cursor-paginator.entity';
+import { GetVehiclesPaginator } from './get-vehicles-paginator.entity';
 
-export class SearchVehicles extends CursorPaginator {
+export class SearchVehicles extends GetVehiclesPaginator {
   readonly brand?: string;
   readonly model?: string;
   readonly location?: string;

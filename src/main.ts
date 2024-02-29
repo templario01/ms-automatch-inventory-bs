@@ -34,7 +34,7 @@ async function bootstrap() {
   const logger = new Logger('Bootstrap');
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(port, '0.0.0.0', () => {
+  await app.listen(port, () => {
     logger.log(`Server running on port: ${port} 🚀 ✨✨`);
   });
 }

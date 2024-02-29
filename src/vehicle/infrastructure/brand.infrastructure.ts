@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { vehicleBrands } from '../database/data/vehicle-brands';
+import { vehicleBrands } from './database/data/vehicle-brands';
 import { plainToInstance } from 'class-transformer';
-import { Brand } from '../../domain/entities/outbound/brand.entity';
+import { Brand } from '../domain/entities/outbound/brand.entity';
+import { BrandRepository } from '../domain/repositories/brand.repository';
 
 @Injectable()
-export class LocalBrandsRepository {
+export class BrandInfrastructure implements BrandRepository {
   public filterBrands(word: string): Brand[] {
     const brands = vehicleBrands.filter((brand) =>
       brand.name.toLowerCase().includes(word.toLowerCase()),

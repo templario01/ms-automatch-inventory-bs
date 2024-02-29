@@ -29,6 +29,7 @@ spec:
       labels:
         app: ms-automatch-inventory-bs
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: ms-automatch-inventory-bs
           image: 020503494232.dkr.ecr.us-east-1.amazonaws.com/ms-automatch-inventory-bs:1.1

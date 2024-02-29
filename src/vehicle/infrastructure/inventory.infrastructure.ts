@@ -4,22 +4,22 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { PrismaService } from '../database/prisma.service';
-import { InventoryRepository } from '../../domain/repositories/inventory.repository';
+import { PrismaService } from './database/prisma.service';
+import { InventoryRepository } from '../domain/repositories/inventory.repository';
 import { Vehicle as PrismaVehicle } from '@prisma/client';
-import { IEdgeType } from '../../domain/repositories/interfaces/pagination.interface';
-import { Paginator } from '../../domain/entities/outbound/paginator.entity';
-import { IPrismaVehicleInput } from '../../domain/repositories/interfaces/prisma-vehicle.interface';
-import { SearchVehicles } from '../../domain/entities/inbound/search-vehicles.entity';
+import { IEdgeType } from '../domain/repositories/interfaces/pagination.interface';
+import { Paginator } from '../domain/entities/outbound/paginator.entity';
+import { PrismaVehicleInput } from './database/types/prisma.vehicle';
+import { SearchVehicles } from '../domain/entities/inbound/search-vehicles.entity';
 import {
   Vehicle,
   VehicleCondition,
-} from '../../domain/entities/outbound/vehicle.entity';
-import { IGetInventoryFilters } from '../../domain/repositories/interfaces/get-inventory-filters';
+} from '../domain/entities/outbound/vehicle.entity';
+import { GetInventoryFilters } from './database/types/vehicle-filters';
 
 @Injectable()
-export class PrismaInventoryRepository implements InventoryRepository {
-  private readonly logger = new Logger(PrismaInventoryRepository.name);
+export class InventoryInfrastructure implements InventoryRepository {
+  private readonly logger = new Logger(InventoryInfrastructure.name);
   constructor(private readonly prisma: PrismaService) {}
 
   public async getVehiclesByIds(vehicleIds: string[]): Promise<Vehicle[]> {
@@ -60,7 +60,7 @@ export class PrismaInventoryRepository implements InventoryRepository {
   }
 
   private async getVehiclesByPrismaFilter(
-    params: IGetInventoryFilters,
+    params: GetInventoryFilters,
   ): Promise<Paginator<Vehicle>> {
     const { take, after, where, hasOrderBy = true } = params;
     const totalCount: Awaited<number> = await this.prisma.vehicle.count({
@@ -99,13 +99,13 @@ export class PrismaInventoryRepository implements InventoryRepository {
 
   private buildConditionFilter(
     condition?: VehicleCondition,
-  ): IPrismaVehicleInput {
+  ): PrismaVehicleInput {
     return condition
       ? { condition: { equals: VehicleCondition[condition] } }
       : {};
   }
 
-  private buildLocationFilter(location?: string): IPrismaVehicleInput {
+  private buildLocationFilter(location?: string): PrismaVehicleInput {
     return location
       ? {
           location: {
@@ -119,7 +119,7 @@ export class PrismaInventoryRepository implements InventoryRepository {
   private buildPriceFilter(
     minPrice: number,
     maxPrice: number,
-  ): IPrismaVehicleInput {
+  ): PrismaVehicleInput {
     if (minPrice && !maxPrice) {
       return { price: { gte: minPrice } };
     }
@@ -133,11 +133,11 @@ export class PrismaInventoryRepository implements InventoryRepository {
     return {};
   }
 
-  private buildYearFilter(year?: number): IPrismaVehicleInput {
+  private buildYearFilter(year?: number): PrismaVehicleInput {
     return year ? { year: { equals: year } } : {};
   }
 
-  private buildNameFilter(brand?: string, model?: string): IPrismaVehicleInput {
+  private buildNameFilter(brand?: string, model?: string): PrismaVehicleInput {
     if (brand && !model) {
       return {
         name: {
