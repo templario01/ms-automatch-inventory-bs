@@ -3,7 +3,7 @@ import { InventoryController } from './api/controllers/inventory.controller';
 import { InventoryRepository } from '../domain/repositories/inventory.repository';
 import { InventoryInfrastructure } from './inventory.infrastructure';
 import { InventoryUseCase } from '../application/inventory.use-case';
-import { PrismaModule } from './database/prisma.module';
+import { PrismaModule } from '../../core/database/prisma.module';
 import { VehicleBrandController } from './api/controllers/vehicle-brand.controller';
 import { BrandRepository } from '../domain/repositories/brand.repository';
 import { BrandInfrastructure } from './brand.infrastructure';

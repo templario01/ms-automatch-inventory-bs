@@ -2,7 +2,7 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { VehicleBrandUseCase } from '../../../application/vehicle-brand.use-case';
 import { BrandDto } from '../dtos/response/brand.dto';
-import { ValidateWordPipe } from '../../../../common/pipes/validate-word.pipe';
+import { ValidateWordPipe } from '../../../../core/common/pipes/validate-word.pipe';
 
 @ApiTags('Brands')
 @Controller('brands')

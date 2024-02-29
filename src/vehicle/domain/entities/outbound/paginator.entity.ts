@@ -1,4 +1,4 @@
-import { IEdgeType } from '../../repositories/interfaces/pagination.interface';
+import { IEdgeType } from '../../repositories/interfaces/paginator.interface';
 
 export class Paginator<T> {
   readonly edges: IEdgeType<T>[];

@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { InventoryUseCase } from '../../../application/inventory.use-case';
-import { ExtractIdsPipe } from '../../../../common/pipes/extract-ids.pipe';
+import { ExtractIdsPipe } from '../../../../core/common/pipes/extract-ids.pipe';
 import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SearchVehiclesDto } from '../dtos/request/search-vehicles.dto';
 import { VehicleDto } from '../dtos/response/vehicle.dto';

@@ -1,7 +1,7 @@
 import { Vehicle as PrismaVehicle } from '@prisma/client';
 import { plainToInstance } from 'class-transformer';
 import { Paginator } from './paginator.entity';
-import { IPaginatedResponse } from '../../repositories/interfaces/pagination.interface';
+import { IPaginatedResponse } from '../../repositories/interfaces/paginator.interface';
 
 export enum VehicleCondition {
   NEW = 'NEW',

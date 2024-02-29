@@ -4,18 +4,18 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { PrismaService } from './database/prisma.service';
+import { PrismaService } from '../../core/database/prisma.service';
 import { InventoryRepository } from '../domain/repositories/inventory.repository';
 import { Vehicle as PrismaVehicle } from '@prisma/client';
-import { IEdgeType } from '../domain/repositories/interfaces/pagination.interface';
+import { IEdgeType } from '../domain/repositories/interfaces/paginator.interface';
 import { Paginator } from '../domain/entities/outbound/paginator.entity';
-import { PrismaVehicleInput } from './database/types/prisma.vehicle';
+import { PrismaVehicleInput } from '../../core/database/types/prisma.vehicle';
 import { SearchVehicles } from '../domain/entities/inbound/search-vehicles.entity';
 import {
   Vehicle,
   VehicleCondition,
 } from '../domain/entities/outbound/vehicle.entity';
-import { GetInventoryFilters } from './database/types/vehicle-filters';
+import { GetInventoryFilters } from '../../core/database/types/vehicle-filters';
 
 @Injectable()
 export class InventoryInfrastructure implements InventoryRepository {
