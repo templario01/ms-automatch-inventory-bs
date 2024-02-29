@@ -6,7 +6,7 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { VehicleCondition } from '../../../../domain/entities/outbound/vehicle.entity';
+import { VehicleCondition } from '../../../../domain/entities/outbound/vehicle';
 import { CursorPaginatorDto } from './cursor-paginator.dto';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 

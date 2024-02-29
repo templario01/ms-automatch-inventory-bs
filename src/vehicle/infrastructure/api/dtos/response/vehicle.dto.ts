@@ -1,5 +1,5 @@
 import { ApiAcceptedResponse, ApiProperty } from '@nestjs/swagger';
-import { VehicleCondition } from '../../../../domain/entities/outbound/vehicle.entity';
+import { VehicleCondition } from '../../../../domain/entities/outbound/vehicle';
 
 @ApiAcceptedResponse()
 export class VehicleDto {

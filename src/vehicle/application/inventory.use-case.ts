@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InventoryRepository } from '../domain/repositories/inventory.repository';
-import { Vehicle } from '../domain/entities/outbound/vehicle.entity';
-import { SearchVehicles } from '../domain/entities/inbound/search-vehicles.entity';
-import { Paginator } from '../domain/entities/outbound/paginator.entity';
+import { Vehicle } from '../domain/entities/outbound/vehicle';
+import { GetFilteredVehiclesInput } from '../domain/entities/inbound/get-filtered-vehicles-input';
+import { CursorPaginator } from '../domain/entities/outbound/cursor-paginator';
 
 @Injectable()
 export class InventoryUseCase {
   constructor(private readonly inventoryRepository: InventoryRepository) {}
 
   public async getFilteredVehicles(
-    input: SearchVehicles,
-  ): Promise<Paginator<Vehicle>> {
+    input: GetFilteredVehiclesInput,
+  ): Promise<CursorPaginator<Vehicle>> {
     return this.inventoryRepository.getVehiclesBySearch(input);
   }
   public async getVehiclesByIds(vehicleIds: string[]): Promise<Vehicle[]> {

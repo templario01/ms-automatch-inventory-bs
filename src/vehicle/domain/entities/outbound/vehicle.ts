@@ -1,7 +1,7 @@
 import { Vehicle as PrismaVehicle } from '@prisma/client';
 import { plainToInstance } from 'class-transformer';
-import { Paginator } from './paginator.entity';
-import { IPaginatedResponse } from '../../repositories/interfaces/paginator.interface';
+import { CursorPaginator } from './cursor-paginator';
+import { IPaginatedResponse } from '../../../../core/common/types/paginator.interface';
 
 export enum VehicleCondition {
   NEW = 'NEW',
@@ -52,8 +52,8 @@ export class Vehicle {
     return data.map((vehicle) => Vehicle.prismaToEntity(vehicle));
   }
 
-  static paginate(data: IPaginatedResponse<Vehicle>): Paginator<Vehicle> {
-    return plainToInstance(Paginator<Vehicle>, {
+  static paginate(data: IPaginatedResponse<Vehicle>): CursorPaginator<Vehicle> {
+    return plainToInstance(CursorPaginator<Vehicle>, {
       ...data,
     });
   }

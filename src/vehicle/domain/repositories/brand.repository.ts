@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Brand } from '../entities/outbound/brand.entity';
+import { VehicleBrand } from '../entities/outbound/vehicle-brand';
 
 @Injectable()
 export abstract class BrandRepository {
-  abstract filterBrands(word: string): Brand[];
+  abstract filterBrands(word: string): VehicleBrand[];
 }

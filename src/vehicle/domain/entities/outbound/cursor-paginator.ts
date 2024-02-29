@@ -1,6 +1,6 @@
-import { IEdgeType } from '../../repositories/interfaces/paginator.interface';
+import { IEdgeType } from '../../../../core/common/types/paginator.interface';
 
-export class Paginator<T> {
+export class CursorPaginator<T> {
   readonly edges: IEdgeType<T>[];
   readonly nodes: T[];
   readonly totalCount: number;

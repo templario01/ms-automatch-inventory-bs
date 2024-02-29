@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { BrandRepository } from '../domain/repositories/brand.repository';
-import { Brand } from '../domain/entities/outbound/brand.entity';
+import { VehicleBrand } from '../domain/entities/outbound/vehicle-brand';
 
 @Injectable()
 export class VehicleBrandUseCase {
   constructor(private readonly brandRepository: BrandRepository) {}
 
-  public getFilteredBrands(word: string): Brand[] {
+  public getFilteredBrands(word: string): VehicleBrand[] {
     return this.brandRepository.filterBrands(word);
   }
 }

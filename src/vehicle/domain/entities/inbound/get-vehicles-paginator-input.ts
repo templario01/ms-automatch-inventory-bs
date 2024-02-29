@@ -1,4 +1,4 @@
-export class GetVehiclesPaginator {
+export class GetVehiclesPaginatorInput {
   readonly take?: number;
   readonly after?: string;
 }

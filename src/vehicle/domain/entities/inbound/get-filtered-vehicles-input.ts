@@ -1,7 +1,7 @@
-import { VehicleCondition } from '../outbound/vehicle.entity';
-import { GetVehiclesPaginator } from './get-vehicles-paginator.entity';
+import { VehicleCondition } from '../outbound/vehicle';
+import { GetVehiclesPaginatorInput } from './get-vehicles-paginator-input';
 
-export class SearchVehicles extends GetVehiclesPaginator {
+export class GetFilteredVehiclesInput extends GetVehiclesPaginatorInput {
   readonly brand?: string;
   readonly model?: string;
   readonly location?: string;
