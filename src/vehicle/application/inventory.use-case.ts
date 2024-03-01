@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { InventoryRepository } from '../domain/repositories/inventory.repository';
+import { IInventoryRepository } from '../domain/repositories/inventory.repository';
 import { Vehicle } from '../domain/entities/outbound/vehicle';
 import { GetFilteredVehiclesInput } from '../domain/entities/inbound/get-filtered-vehicles-input';
 import { CursorPaginator } from '../domain/entities/outbound/cursor-paginator';
 
 @Injectable()
 export class InventoryUseCase {
-  constructor(private readonly inventoryRepository: InventoryRepository) {}
+  constructor(private readonly inventoryRepository: IInventoryRepository) {}
 
   public async getFilteredVehicles(
     input: GetFilteredVehiclesInput,

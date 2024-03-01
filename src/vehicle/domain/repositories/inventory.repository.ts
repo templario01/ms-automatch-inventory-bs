@@ -4,7 +4,7 @@ import { CursorPaginator } from '../entities/outbound/cursor-paginator';
 import { GetFilteredVehiclesInput } from '../entities/inbound/get-filtered-vehicles-input';
 
 @Injectable()
-export abstract class InventoryRepository {
+export abstract class IInventoryRepository {
   abstract getVehiclesBySearch(
     params: GetFilteredVehiclesInput,
   ): Promise<CursorPaginator<Vehicle>>;

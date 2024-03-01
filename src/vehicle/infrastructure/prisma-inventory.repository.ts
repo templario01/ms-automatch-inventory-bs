@@ -1,11 +1,6 @@
-import {
-  Injectable,
-  Logger,
-  NotFoundException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../core/database/prisma.service';
-import { InventoryRepository } from '../domain/repositories/inventory.repository';
+import { IInventoryRepository } from '../domain/repositories/inventory.repository';
 import { Vehicle as PrismaVehicle } from '@prisma/client';
 import { IEdgeType } from '../../core/common/types/paginator.interface';
 import { CursorPaginator } from '../domain/entities/outbound/cursor-paginator';
@@ -15,26 +10,20 @@ import { Vehicle, VehicleCondition } from '../domain/entities/outbound/vehicle';
 import { GetInventoryFilters } from '../../core/database/types/vehicle-filters';
 
 @Injectable()
-export class InventoryInfrastructure implements InventoryRepository {
-  private readonly logger = new Logger(InventoryInfrastructure.name);
+export class PrismaInventoryRepository implements IInventoryRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   public async getVehiclesByIds(vehicleIds: string[]): Promise<Vehicle[]> {
-    try {
-      const prismaVehicles: Awaited<PrismaVehicle[]> =
-        await this.prisma.vehicle.findMany({
-          where: { id: { in: [...vehicleIds] } },
-        });
+    const prismaVehicles: Awaited<PrismaVehicle[]> =
+      await this.prisma.vehicle.findMany({
+        where: { id: { in: [...vehicleIds] } },
+      });
 
-      if (!prismaVehicles || prismaVehicles.length === 0) {
-        throw new NotFoundException('Resource not found');
-      }
-
-      return Vehicle.prismaToEntities(prismaVehicles);
-    } catch (error) {
-      this.logger.error({ msg: 'fail to get vehicle info', error });
-      throw new UnprocessableEntityException();
+    if (!prismaVehicles || prismaVehicles.length === 0) {
+      throw new NotFoundException('Resource not found');
     }
+
+    return Vehicle.prismaToEntities(prismaVehicles);
   }
 
   public getVehiclesBySearch(
