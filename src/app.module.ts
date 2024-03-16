@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { InventoryModule } from './vehicle/infrastructure/vehicle.module';
+import { InventoryModule } from './vehicle/vehicle.module';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { EnvSettings, envSettings } from './core/settings/env.settings';
