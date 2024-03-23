@@ -7,7 +7,6 @@ import {
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { GlobalExceptionFilter } from './core/common/exceptions/global-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -34,7 +33,6 @@ async function bootstrap() {
   const port = app.get(ConfigService).get<number>('PORT');
   const logger = new Logger('Bootstrap');
   SwaggerModule.setup('api', app, document);
-  app.useGlobalFilters(new GlobalExceptionFilter());
 
   await app.listen(port, () => {
     logger.log(`Server running on port: ${port} 🚀 ✨✨`);

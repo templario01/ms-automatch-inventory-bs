@@ -78,10 +78,10 @@ export class VehicleDto {
 
   @ApiProperty({
     description: 'vehicle listing currency',
-    enum: ['USD', 'PEN'],
+    enum: ['USD', 'PEN', 'USDPEN'],
     example: 'USD',
   })
-  readonly currency: 'PEN' | 'USD';
+  readonly currency: 'PEN' | 'USD' | 'USDPEN';
 
   @ApiProperty({
     description: 'vehicle creation date',

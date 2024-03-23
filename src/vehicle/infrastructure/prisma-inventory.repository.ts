@@ -6,7 +6,11 @@ import { IEdgeType } from '../../core/common/types/paginator.interface';
 import { CursorPaginator } from '../domain/entities/outbound/cursor-paginator';
 import { PrismaVehicleInput } from '../../core/database/types/prisma.vehicle';
 import { GetFilteredVehiclesInput } from '../domain/entities/inbound/get-filtered-vehicles-input';
-import { Vehicle, VehicleCondition } from '../domain/entities/outbound/vehicle';
+import {
+  Vehicle,
+  VehicleCondition,
+  VehicleListingStatus,
+} from '../domain/entities/outbound/vehicle';
 import { GetInventoryFilters } from '../../core/database/types/vehicle-filters';
 
 @Injectable()
@@ -34,6 +38,7 @@ export class PrismaInventoryRepository implements IInventoryRepository {
 
     const whereFilter = {
       AND: [
+        this.buildOnlyActiveVehiclesFilter(),
         this.buildNameFilter(brand, model),
         this.buildYearFilter(year),
         this.buildLocationFilter(location),
@@ -155,5 +160,11 @@ export class PrismaInventoryRepository implements IInventoryRepository {
     }
 
     return {};
+  }
+
+  private buildOnlyActiveVehiclesFilter(): PrismaVehicleInput {
+    return {
+      status: VehicleListingStatus.ACTIVE,
+    };
   }
 }

@@ -11,6 +11,7 @@ export enum VehicleCondition {
 export enum VehiclePriceCurrency {
   PEN = 'PEN',
   USD = 'USD',
+  USDPEN = 'USDPEN',
 }
 
 export enum VehicleListingStatus {
