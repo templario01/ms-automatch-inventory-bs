@@ -1,17 +1,12 @@
 apiVersion: v1
-kind: Namespace
-metadata:
-  name: automatch
-
----
-apiVersion: v1
 kind: ConfigMap
 metadata:
   name: automatch-inventory-bs-configmap
   namespace: automatch
 data:
-  NODE_ENV: "staging"
+  NODE_ENV: "production"
   PORT: "3030"
+  DATABASE_URL: "mongodb+srv://victbenavente:023FjoIZxpOQFKEa@automatch-mongo-cluster.tjppmyq.mongodb.net/automatch-inventory?retryWrites=true&w=majority"
 
 ---
 apiVersion: apps/v1
@@ -32,7 +27,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: ms-automatch-inventory-bs
-          image: 020503494232.dkr.ecr.us-east-1.amazonaws.com/ms-automatch-inventory-bs:1.1
+          image: victor0141/ms-automatch-inventory-bs:1.2
           imagePullPolicy: Always
           env:
             - name: NODE_ENV
@@ -47,8 +42,8 @@ spec:
                   key: PORT
             - name: DATABASE_URL
               valueFrom:
-                secretKeyRef:
-                  name: automatch-inventory-bs-secrets
+                configMapKeyRef:
+                  name: automatch-inventory-bs-configmap
                   key: DATABASE_URL
           ports:
             - containerPort: 3030
@@ -57,8 +52,8 @@ spec:
               memory: "128Mi"
               cpu: "100m"
             limits:
-              memory: "512Mi" # max RAM = 512 Mb
-              cpu: "300m" # max CPU-Cores = 0.3 GB
+              memory: "512Mi"
+              cpu: "500m" 
 
 ---
 apiVersion: v1
@@ -73,5 +68,5 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 3030
-  type: ClusterIP #[ClusterIP]Expose node for internal k8 comunication, [LoadBalancer]Expose node for external comunication
+  type: ClusterIP
 
