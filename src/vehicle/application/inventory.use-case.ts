@@ -3,6 +3,7 @@ import { IInventoryRepository } from '../domain/repositories/inventory.repositor
 import { Vehicle } from '../domain/entities/outbound/vehicle';
 import { GetFilteredVehiclesInput } from '../domain/entities/inbound/get-filtered-vehicles-input';
 import { CursorPaginator } from '../domain/entities/outbound/cursor-paginator';
+import { Search } from '../domain/entities/inbound/search-input';
 
 @Injectable()
 export class InventoryUseCase {
@@ -15,5 +16,9 @@ export class InventoryUseCase {
   }
   public async getVehiclesByIds(vehicleIds: string[]): Promise<Vehicle[]> {
     return this.inventoryRepository.getVehiclesByIds(vehicleIds);
+  }
+
+  public async getRecommendedVehicles(input: Search[]): Promise<Vehicle[]> {
+    return this.inventoryRepository.getRecommendedVehicles(input);
   }
 }

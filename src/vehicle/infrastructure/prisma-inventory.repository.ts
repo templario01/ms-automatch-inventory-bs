@@ -12,6 +12,7 @@ import {
   VehicleListingStatus,
 } from '../domain/entities/outbound/vehicle';
 import { GetInventoryFilters } from '../../core/database/types/vehicle-filters';
+import { Search } from '../domain/entities/inbound/search-input';
 
 @Injectable()
 export class PrismaInventoryRepository implements IInventoryRepository {
@@ -48,6 +49,26 @@ export class PrismaInventoryRepository implements IInventoryRepository {
     };
 
     return this.getVehiclesByPrismaFilter({ ...params, where: whereFilter });
+  }
+
+  public async getRecommendedVehicles(data: Search[]): Promise<Vehicle[]> {
+    const vehicles = await Promise.all(
+      data.map(async (search) => {
+        const vehicle = await this.prisma.vehicle.findFirst({
+          where: {
+            AND: [
+              { name: { contains: search.brand, mode: 'insensitive' } },
+              { name: { contains: search.model, mode: 'insensitive' } },
+              { year: { gte: search.minYear, lte: search.maxYear } },
+              { status: VehicleListingStatus.ACTIVE },
+            ],
+          },
+          orderBy: { price: 'asc' },
+        });
+        return Vehicle.prismaToEntity(vehicle);
+      }),
+    );
+    return vehicles;
   }
 
   private async getVehiclesByPrismaFilter(
