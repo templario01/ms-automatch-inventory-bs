@@ -7,6 +7,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import * as os from 'os';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -36,6 +37,7 @@ async function bootstrap() {
 
   await app.listen(port, '0.0.0.0', () => {
     logger.log(`Server running on port: ${port} 🚀 ✨✨`);
+    logger.log(`Documentation ready on http://localhost:${port}/api`);
   });
 }
 bootstrap();
