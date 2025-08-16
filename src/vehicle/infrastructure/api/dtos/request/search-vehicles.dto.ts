@@ -45,7 +45,13 @@ export class SearchVehiclesDto extends CursorPaginatorDto {
   @IsOptional()
   @IsNumber()
   @Min(0)
-  readonly year?: number;
+  readonly minYear?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  readonly maxYear?: number;
 
   @ApiPropertyOptional()
   @IsOptional()

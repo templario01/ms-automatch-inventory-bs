@@ -34,14 +34,22 @@ export class PrismaInventoryRepository implements IInventoryRepository {
   public getVehiclesBySearch(
     params: GetFilteredVehiclesInput,
   ): Promise<CursorPaginator<Vehicle>> {
-    const { brand, model, location, minPrice, maxPrice, year, condition } =
-      params;
+    const {
+      brand,
+      model,
+      location,
+      minPrice,
+      maxPrice,
+      minYear,
+      maxYear,
+      condition,
+    } = params;
 
     const whereFilter = {
       AND: [
         this.buildOnlyActiveVehiclesFilter(),
         this.buildNameFilter(brand, model),
-        this.buildYearFilter(year),
+        this.buildYearFilter(minYear, maxYear),
         this.buildLocationFilter(location),
         this.buildConditionFilter(condition),
         this.buildPriceFilter(minPrice, maxPrice),
@@ -145,8 +153,19 @@ export class PrismaInventoryRepository implements IInventoryRepository {
     return {};
   }
 
-  private buildYearFilter(year?: number): PrismaVehicleInput {
-    return year ? { year: { equals: year } } : {};
+  private buildYearFilter(
+    minYear?: number,
+    maxYear?: number,
+  ): PrismaVehicleInput {
+    if (minYear && maxYear) {
+      const years = this.getMiddleYears(minYear, maxYear);
+      return { year: { in: years } };
+    }
+    if (!minYear && maxYear) {
+      const years = this.getMiddleYears(1900, maxYear);
+      return { year: { in: years } };
+    }
+    return {};
   }
 
   private buildNameFilter(brand?: string, model?: string): PrismaVehicleInput {
@@ -187,5 +206,13 @@ export class PrismaInventoryRepository implements IInventoryRepository {
     return {
       status: VehicleListingStatus.ACTIVE,
     };
+  }
+
+  private getMiddleYears(start: number, end: number): number[] {
+    const years: number[] = [];
+    for (let year = start; year <= end; year++) {
+      years.push(year);
+    }
+    return years;
   }
 }

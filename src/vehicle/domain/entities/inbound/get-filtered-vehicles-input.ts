@@ -7,6 +7,7 @@ export class GetFilteredVehiclesInput extends GetVehiclesPaginatorInput {
   readonly location?: string;
   readonly minPrice?: number;
   readonly maxPrice?: number;
-  readonly year?: number;
+  readonly minYear?: number;
+  readonly maxYear?: number;
   readonly condition?: VehicleCondition;
 }

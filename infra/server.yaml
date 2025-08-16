@@ -6,7 +6,7 @@ metadata:
 data:
   NODE_ENV: "production"
   PORT: "3000"
-  DATABASE_URL: ""
+  DATABASE_URL: "mongodb+srv://victbenavente:SubCbU2g4TDT2Y5d@automatch-db-cluster.ndkm2.mongodb.net/automatch-inventory?retryWrites=true&w=majority"
 
 ---
 apiVersion: apps/v1
