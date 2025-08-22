@@ -1,6 +1,6 @@
 # Variables victor0141/automatch-inventory-script:1.2
 IMAGE_NAME := victor0141/$(shell basename $(CURDIR))
-TAG := 1.4
+TAG := 1.5
 
 # Construir la imagen Docker
 build:
